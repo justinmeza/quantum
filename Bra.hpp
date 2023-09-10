@@ -15,7 +15,7 @@ class Bra {
 
 		Bra() {}
 
-		Bra(auto elements) {
+		explicit Bra(auto elements) {
 			this->elements = elements;
 		}
 

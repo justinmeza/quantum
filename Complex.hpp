@@ -8,10 +8,17 @@ using namespace std;
 
 class Complex {
 	public:
-		Complex(double x, double y) {
+		Complex(double x = 0.0, double y = 0.0) {
 			this->x = x;
 			this->y = y;
 		}
+
+		bool operator <(const Complex& rhs) const
+    {
+        return (this->getReal() < rhs.getReal() && this->getImaginary() < rhs.getImaginary())
+					|| (this->getReal() == rhs.getReal() && this->getImaginary() < rhs.getImaginary())
+					|| (this->getReal() < rhs.getReal() && this->getImaginary() == rhs.getImaginary());
+    }
 
 		double getReal() const {
 			return this->x;
@@ -30,9 +37,9 @@ class Complex {
 		}
 
 		friend Complex operator+(Complex lhs, const Complex& rhs) {
-			lhs.setReal(lhs.getReal() + rhs.getReal());
-			lhs.setImaginary(lhs.getImaginary() + rhs.getImaginary());
-			return lhs;
+			double x = lhs.getReal() + rhs.getReal();
+			double y = lhs.getImaginary() + rhs.getImaginary();
+			return Complex(x, y);
 		}
 
 		friend Complex operator+(Complex lhs, const double rhs) {
@@ -58,9 +65,7 @@ class Complex {
 		friend Complex operator*(Complex lhs, const Complex& rhs) {
 			double x = lhs.getReal() * rhs.getReal() - lhs.getImaginary() * rhs.getImaginary();
 			double y = lhs.getReal() * rhs.getImaginary() + lhs.getImaginary() * rhs.getReal();
-			lhs.setReal(x);
-			lhs.setImaginary(y);
-			return lhs;
+			return Complex(x, y);
 		}
 
 		friend Complex operator-(Complex lhs, const Complex& rhs) {
@@ -82,9 +87,7 @@ class Complex {
 					/ (rhs.getReal() * rhs.getReal() + rhs.getImaginary() * rhs.getImaginary());
 			double y = (lhs.getImaginary() * rhs.getReal() - lhs.getReal() * rhs.getImaginary())
 					/ (rhs.getReal() * rhs.getReal() + rhs.getImaginary() * rhs.getImaginary());
-			lhs.setReal(x);
-			lhs.setImaginary(y);
-			return lhs;
+			return Complex(x, y);
 		}
 
 		friend Complex operator/(Complex lhs, const double rhs) {
@@ -102,11 +105,30 @@ class Complex {
 		}
 
 		double getRadius() {
-			return sqrt(x * x + y * y);
+			return ::sqrt(x * x + y * y);
 		}
 
 		double getTheta() {
 			return atan(y / x);
+		}
+
+		Complex abs() const {
+			return Complex(::sqrt(x * x + y * y), 0.0);
+		}
+
+		Complex sqrt() {
+			/* int sign = y < 0 ? -1 : 1; */
+			/* return Complex(::sqrt(0.5 * (::sqrt(x * x + y * y) + x)), sign * ::sqrt(0.5 * (::sqrt(x * x + y * y) - x))); */
+			double r = this->abs().getReal();
+			return ::sqrt(r) * (*this + r) / (*this + r).abs();
+
+			/* double r = ::sqrt(::hypot(this->getReal(), this->getImaginary())); */
+			/* double theta = ::atan2(this->getImaginary(), this->getReal()); */
+			/* double sqrt_r = ::sqrt(r); */
+			/* double angle = theta / 2; */
+			/* double real = sqrt_r * ::cos(angle); */
+			/* double imag = sqrt_r * ::sin(angle); */
+			/* return Complex(real, imag); */
 		}
 
 	private:

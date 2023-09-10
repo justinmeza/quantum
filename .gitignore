@@ -1,1 +1,3 @@
 a.out
+.cache/
+compile_commands.json

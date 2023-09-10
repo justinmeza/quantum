@@ -15,16 +15,12 @@ class Ket {
 
 		Ket() {}
 
-		Ket(auto elements) {
+		explicit Ket(auto elements) {
 			this->elements = elements;
 		}
 
-		friend Ket operator*(Ket lhs, const double rhs) {
-			Complex scalar(rhs, 0);
-			for (auto e = lhs.elements.begin(); e != lhs.elements.end(); e++) {
-				*e = *e * scalar;
-			}
-			return lhs;
+		Ket(const Ket& k) {
+			this->elements = k.elements;
 		}
 
 		friend Ket operator*(double lhs, Ket rhs) {
