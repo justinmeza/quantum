@@ -11,12 +11,26 @@ using namespace std;
 
 class Operator {
 	public:
-		vector<vector<Complex> > elements;  // Row-major.
+		vector<vector<Complex>> elements;  // Row-major.
 
 		Operator() {}
 
-		Operator(auto elements) {
-			this->elements = elements;
+		explicit Operator(auto elements) {
+			for (auto e : elements) {
+				this->elements.push_back(e);
+			}
+		}
+
+		friend Operator operator*(Complex lhs, const Operator rhs) {
+			Operator ret;
+			for (auto r : rhs.elements) {
+				Bra b;
+				for (auto c : r) {
+					b.elements.push_back(c);
+				}
+				ret.elements.push_back(b.elements);
+			}
+			return rhs;
 		}
 
 		friend Ket operator*(Operator lhs, const Ket rhs) {
@@ -130,18 +144,22 @@ class Operator {
 				}
 				cout << endl;
 			}
+			// Match eigenvalues to correct eigenvectors.
 			map<Complex, Ket> ret;
 			for (auto n = 0; n < eigenvalues.size(); n++) {
 				Complex eigval = eigenvalues[n];
-				Ket u, v;
-				for (auto l = 0; l < eigenvectors[n].size() / 2; l++) {
-					u.elements.push_back(eigenvectors[n][l]);
-					v.elements.push_back(eigenvectors[n][l + (eigenvectors[n].size() / 2)]);
-				}
-				Ket eigvec(u + Complex(0.0, 1.0) * v);
-				if (ret.find(eigval) == ret.end()) {
-					cout << eigval << ": " << eigvec << endl;
-					ret.insert(pair<Complex, Ket>(eigval, eigvec));
+				for (auto m : eigenvectors) {
+					Ket u, v;
+					for (auto l = 0; l < m.size() / 2; l++) {
+						u.elements.push_back(m[l]);
+						v.elements.push_back(m[l + (m.size() / 2)]);
+					}
+					Ket eigvec(u + Complex(0.0, 1.0) * v);
+					if ((((*this) * eigvec) == (eigval * eigvec)) && (ret.find(eigval) == ret.end())) {
+						cout << eigval << ": " << eigvec << endl;
+						ret.insert(pair<Complex, Ket>(eigval, eigvec));
+						break;
+					}
 				}
 			}
 			return ret;
@@ -235,29 +253,7 @@ class Operator {
 	private:
 };
 
-Operator operator*(Ket lhs, Bra rhs) {
-	vector<vector<Complex>> ret;
-	ret.resize(lhs.elements.size(), vector<Complex>(rhs.elements.size(), 0.0));
-	for (auto l = 0; l < lhs.elements.size(); l++) {
-		for (auto r = 0; r < rhs.elements.size(); r++) {
-			ret[l][r] = lhs.elements[l] * rhs.elements[r];
-		}
-	}
-	return Operator(ret);
-}
-
-ostream& operator<<(ostream& os, const Operator& obj)
-{
-	os << "[";
-	for (auto r = 0; r < obj.elements.size(); r++) {
-		Bra tmp(obj.elements[r]);
-		os << tmp;
-		if (r < obj.elements.size() - 1) {
-			os << ", ";
-		}
-	}
-	os << "]";
-	return os;
-}
+Operator operator*(Ket lhs, Bra rhs);
+ostream& operator<<(ostream& os, const Operator& obj);
 
 #endif // __OPERATOR_HPP

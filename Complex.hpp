@@ -13,12 +13,19 @@ class Complex {
 			this->y = y;
 		}
 
-		bool operator <(const Complex& rhs) const
-    {
-        return (this->getReal() < rhs.getReal() && this->getImaginary() < rhs.getImaginary())
-					|| (this->getReal() == rhs.getReal() && this->getImaginary() < rhs.getImaginary())
-					|| (this->getReal() < rhs.getReal() && this->getImaginary() == rhs.getImaginary());
-    }
+		bool operator==(const Complex& rhs) const {
+			auto eps = 1e-10;
+			if (fabs(x - rhs.x) > eps || fabs(y - rhs.y) > eps)
+				return false;
+			return true;
+		}
+
+		bool operator<(const Complex& rhs) const
+		{
+			return (this->getReal() < rhs.getReal() && this->getImaginary() < rhs.getImaginary())
+				|| (this->getReal() == rhs.getReal() && this->getImaginary() < rhs.getImaginary())
+				|| (this->getReal() < rhs.getReal() && this->getImaginary() == rhs.getImaginary());
+		}
 
 		double getReal() const {
 			return this->x;
@@ -104,8 +111,8 @@ class Complex {
 			return Complex(this->x, -1 * this->y);
 		}
 
-		double getRadius() {
-			return ::sqrt(x * x + y * y);
+		Complex getRadius() {
+			return Complex(::sqrt(x * x + y * y), 0);
 		}
 
 		double getTheta() {

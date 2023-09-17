@@ -1,5 +1,14 @@
-#include "Bra.hpp"
 #include "Ket.hpp"
+#include "Bra.hpp"
+#include "Complex.hpp"
+
+Ket::Ket() {}
+Ket::Ket(vector<Complex> elements) {
+	this->elements = elements;
+}
+Ket::Ket(const Ket& k) {
+	this->elements = k.elements;
+}
 
 Bra Ket::toBra() {
 	vector<Complex> ret;

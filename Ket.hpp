@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+
 #include "Complex.hpp"
 
 using namespace std;
@@ -13,14 +14,20 @@ class Ket {
 	public:
 		vector<Complex> elements;
 
-		Ket() {}
+		Ket();
+		explicit Ket(vector<Complex> elements);
+		Ket(const Ket& k);
 
-		explicit Ket(auto elements) {
-			this->elements = elements;
-		}
-
-		Ket(const Ket& k) {
-			this->elements = k.elements;
+		bool operator==(Ket rhs) {
+			auto eps = 1e-10;
+			auto n = 0;
+			for (auto e : elements) {
+				/* cout << e << " vs. " << rhs.elements[n] << endl; */
+				if (e != rhs.elements[n])
+					return false;
+				n++;
+			}
+			return true;
 		}
 
 		friend Ket operator*(double lhs, Ket rhs) {
