@@ -113,13 +113,12 @@ int main(int argc, char** argv) {
 	cout << "T = " << T << endl;
 
 	// Plank's constant.
-	double h = 1.054571726e-34;
-	double h_bar = h / (2 * M_PI);
 	double omega = 1.0;  // TODO:  What shoud this be?
+	Ket initial = Const::up;
 
 	schrodingerKet(
-			(omega * h_bar / 2.0) * Const::pauli_z,
-			Const::up,
+			(omega * Const::h_bar / 2.0) * Const::pauli_z,
+			initial,
 			1.0
 	);
 
