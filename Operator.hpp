@@ -102,7 +102,7 @@ class Operator {
 			return ret.transpose().conjugate();
 		}
 
-		Operator realBlock() {
+		Operator realBlock() const {
 			int len = elements.size();
 			Operator ret;
 			ret.elements.resize(len * 2, vector<Complex>());
@@ -127,23 +127,23 @@ class Operator {
 			return ret;
 		}
 
-		map<Complex, Ket> eigen() {
+		map<Complex, Ket> eigen() const {
 			Operator o = this->realBlock();
 			vector<Complex> eigenvalues;
 			vector<vector<Complex>> eigenvectors;
 			this->jacobi(o.elements, eigenvalues, eigenvectors);
-			cout << "Eigenvalues: ";
-			for (const auto& val : eigenvalues) {
-				cout << val << " ";
-			}
-			cout << endl;
-			cout << "Eigenvectors: " << endl;
-			for (const auto& row : eigenvectors) {
-				for (const auto& val : row) {
-					cout << val << " ";
-				}
-				cout << endl;
-			}
+			/* cout << "Eigenvalues: "; */
+			/* for (const auto& val : eigenvalues) { */
+			/* 	cout << val << " "; */
+			/* } */
+			/* cout << endl; */
+			/* cout << "Eigenvectors: " << endl; */
+			/* for (const auto& row : eigenvectors) { */
+			/* 	for (const auto& val : row) { */
+			/* 		cout << val << " "; */
+			/* 	} */
+			/* 	cout << endl; */
+			/* } */
 			// Match eigenvalues to correct eigenvectors.
 			map<Complex, Ket> ret;
 			for (auto n = 0; n < eigenvalues.size(); n++) {
@@ -156,7 +156,7 @@ class Operator {
 					}
 					Ket eigvec(u + Complex(0.0, 1.0) * v);
 					if ((((*this) * eigvec) == (eigval * eigvec)) && (ret.find(eigval) == ret.end())) {
-						cout << eigval << ": " << eigvec << endl;
+						/* cout << eigval << ": " << eigvec << endl; */
 						ret.insert(pair<Complex, Ket>(eigval, eigvec));
 						break;
 					}
@@ -170,8 +170,9 @@ class Operator {
 				vector<Complex>& eigenvalues,
 				vector<vector<Complex>>& eigenvectors,
 				int maxIterations = 1000,
-				double tolerance = 1e-6
-		) {
+				double tolerance = 1e-6,
+				bool debug = false
+		) const {
 			int n = A.size();
 			eigenvalues.resize(n);
 			eigenvectors.resize(n, vector<Complex>(n, Complex(0.0, 0.0)));
@@ -196,8 +197,10 @@ class Operator {
 						}
 					}
 				}
-				cout << "Max off-diagonal: " << maxOffDiagonal << endl;
-				cout << "p = " << p << ", " << "q = " << q << endl;
+				if (debug) {
+					cout << "Max off-diagonal: " << maxOffDiagonal << endl;
+					cout << "p = " << p << ", " << "q = " << q << endl;
+				}
 
 				/* cout << "Iteration " << iter << ": " << Operator(B) << endl; */
 				// Check for convergence.
@@ -205,7 +208,9 @@ class Operator {
 					for (int i = 0; i < n; ++i) {
 						eigenvalues[i] = B[i][i];
 					}
-					cout << "Jacobi method converged in " << iter << " iterations." << endl;
+					if (debug) {
+						cout << "Jacobi method converged in " << iter << " iterations." << endl;
+					}
 					return;
 				}
 

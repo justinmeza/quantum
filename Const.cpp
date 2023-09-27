@@ -1,5 +1,8 @@
 #include "Const.hpp"
 
+const double Const::h = 1.054571726e-34;
+const double Const::h_bar = Const::h / (2 * M_PI);
+
 const Complex Const::zero(0, 0);
 const Complex Const::one(1, 0);
 const Complex Const::minus_one(-1, 0);

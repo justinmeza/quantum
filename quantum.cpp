@@ -13,8 +13,6 @@ using namespace std;
 
 // Pattern for building a time-dependent Schrödinger Ket.
 void schrodingerKet(Operator hamiltonian, Ket initial_state, double time) {
-	double h = 1.054571726e-34;
-	double h_bar = h / (2 * M_PI);
 	cout << "┅┅┅┅┅ Schrödinger Ket ┅┅┅┅┅" << endl;
 
 	// Define the Hamiltonian operator.
@@ -43,8 +41,8 @@ void schrodingerKet(Operator hamiltonian, Ket initial_state, double time) {
 	for (auto e : eigen) {
 		// Convert from Euler form to Cartesian form.
 		Complex c(
-				cos(-1.0 / h_bar * e.first.getReal() * time),
-				sin(-1.0 / h_bar * e.first.getReal() * time)
+				cos(-1.0 / Const::h_bar * e.first.getReal() * time),
+				sin(-1.0 / Const::h_bar * e.first.getReal() * time)
 		);
 		Ket k = alpha_0[n] * c * e.second;
 		if (n == 0)
@@ -83,7 +81,6 @@ int main(int argc, char** argv) {
 	});
 	// Input wave function (incident photon state).
 	Ket ab(vector<Complex>{Const::zero, Const::one});
-	cout << "---------" << endl;
 	cout << U_2 * U_1 << endl;
 	// Output wave function (photon detector state).
 	Ket D = U_2 * U_1 * ab;

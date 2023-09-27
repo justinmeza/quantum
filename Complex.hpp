@@ -13,6 +13,11 @@ class Complex {
 			this->y = y;
 		}
 
+		Complex(const Complex& rhs) {
+			this->x = rhs.x;
+			this->y = rhs.y;
+		}
+
 		bool operator==(const Complex& rhs) const {
 			auto eps = 1e-10;
 			if (fabs(x - rhs.x) > eps || fabs(y - rhs.y) > eps)
@@ -22,9 +27,13 @@ class Complex {
 
 		bool operator<(const Complex& rhs) const
 		{
-			return (this->getReal() < rhs.getReal() && this->getImaginary() < rhs.getImaginary())
-				|| (this->getReal() == rhs.getReal() && this->getImaginary() < rhs.getImaginary())
-				|| (this->getReal() < rhs.getReal() && this->getImaginary() == rhs.getImaginary());
+			auto eps = 1e-6;
+			return (this->getReal() - rhs.getReal() < -eps
+					&& this->getImaginary() - rhs.getImaginary() < -eps)
+				|| (fabs(this->getReal() - rhs.getReal()) < eps
+						&& this->getImaginary() - rhs.getImaginary() < -eps)
+				|| (this->getReal() - rhs.getReal() < -eps
+						&& fabs(this->getImaginary() - rhs.getImaginary()) < eps);
 		}
 
 		double getReal() const {

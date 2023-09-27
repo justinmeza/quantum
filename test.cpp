@@ -205,10 +205,31 @@ void test() {
 			 && M.conjugate().elements[0][1] == -1 * Const::i
 			 && M.conjugate().elements[1][0] == Const::one * 4
 			 && M.conjugate().elements[1][1] == Const::one * 3));
-	cout << "Hermetian = " << M.hermetian() << endl;
-	cout << M * k << endl;
-	cout << k.toBra() * M.hermetian() << endl;
-	cout << (M * k).toBra() << endl;
+	/* cout << "Hermetian = " << M.hermetian() << endl; */
+	TEST("operator/hermetian",
+			(M.hermetian().elements[0][0] == Const::one
+			 && M.hermetian().elements[1][0] == -1 * Const::i
+			 && M.hermetian().elements[0][1] == Const::one * 4
+			 && M.hermetian().elements[1][1] == Const::one * 3));
+	/* cout << k.toBra() * M.hermetian() << endl; */
+	/* cout << (M * k).toBra() << endl; */
+
+	map<Complex, Ket> eigen = Const::pauli_x.eigen();
+	/* cout << Const::pauli_x.eigen()[Const::one] << endl; */
+	/* cout << Const::pauli_x.eigen()[-1 * Const::one] << endl; */
+	TEST("operator/eigenvalue",
+			(eigen.size() == 2)
+			&& (eigen.find(Const::one) != eigen.end())
+			&& (eigen.find(-1 * Const::one) != eigen.end()));
+	TEST("operator/eigenvector_real",
+			(eigen.size() == 2)
+			&& (eigen[Const::one] == Ket({Const::root_two_inv, Const::root_two_inv}))
+			&& (eigen[-1 * Const::one] == Ket({-1 * Const::root_two_inv, Const::root_two_inv})));
+	eigen = Const::pauli_y.eigen();
+	TEST("operator/eigenvector_complex",
+			(eigen.size() == 2)
+			&& (eigen[Const::one] == Ket({Const::root_two_inv, Const::i * Const::root_two_inv}))
+			&& (eigen[-1 * Const::one] == Ket({Const::i * Const::root_two_inv, Const::root_two_inv})));
 }
 
 int main(int argc, char** argv) {
