@@ -1,6 +1,6 @@
 # Quantum
 
-A simple, quantum mechanics sandbox.  I created this as a learning aid while
+A simple quantum mechanics sandbox.  I created this as a learning aid while
 reading Susskind and Friedman's _Quantum Mechanics: The Theoretical Minimum_
 and Zwiebath's _Mastering Quantum Mechanics: Essentials, Theory, and
 Applications_.
@@ -24,7 +24,7 @@ Here is an example of using this library to solve the time-dependent
 Schrödinger equation for the most basic quantum system consisting of a single
 spin starting in a particular state from Section 4.13 in _Theoretical Minimum_:
 
-```
+```cpp
 void schrodingerKet(Operator hamiltonian, Ket initial_state, double time) {
     // Define the Hamiltonian operator.
     Operator H = hamiltonian;
@@ -80,7 +80,7 @@ void schrodingerKet(Operator hamiltonian, Ket initial_state, double time) {
 
 Then, we can use the function like so:
 
-```
+```cpp
 double omega = 1.0;
 double time = 1.0;
 Ket initial = Const::up;
@@ -94,14 +94,14 @@ schrodingerKet(
 
 Which outputs what we expect:  If the initial state of the quantum system is with an `up` spin and we measure it along the z-axis, the probability of us measuring `up` (corresponding to the Eigenvalue `1`) is `1.0`.
 
-```
+```sh
 P_-1(1) = 0
 P_1(1) = 1
 ```
 
 A more interesting example is if we change the initial state to be `right` and then perform the same measurement along the z-axis:
 
-```
+```sh
 P_-1(1) = 0.5
 P_1(1) = 0.5
 ```
